@@ -48,22 +48,26 @@ public class AnalysisActivity extends AppCompatActivity {
 
         imageView.setImageBitmap(image);
     }
+
+
     public String getFilePath(Uri fileUri){
-        return Environment.getExternalStorageDirectory().getAbsolutePath() +
+        return  Environment.getExternalStorageDirectory() +
                 "/" +
                 fileUri.getPath().split(":")[1];
     }
 
     public void onSaveImageClick(View view) {
-        if (!checkPermissionForWriteExtertalStorage()) {
+        if (!checkPermissionForWriteExternalStorage()) {
             try {
-                requestPermissionForWriteExtertalStorage();
+                requestPermissionForWriteExternalStorage();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        File folder = new File(Environment.getExternalStorageDirectory() +
-                "/" + "Pictures" + "/" + "FileA");
+        File folder = new File(
+                String.format("%s/Pictures/FileA",
+                        Environment.getExternalStorageDirectory()));
+
         boolean success = true;
         if (!folder.exists()) {
             success = folder.mkdirs();
@@ -80,14 +84,14 @@ public class AnalysisActivity extends AppCompatActivity {
         }
     }
 
-    public boolean checkPermissionForWriteExtertalStorage() {
+    public boolean checkPermissionForWriteExternalStorage() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int result = this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
             return result == PackageManager.PERMISSION_GRANTED;
         }
         return false;
     }
-    public void requestPermissionForWriteExtertalStorage() throws Exception {
+    public void requestPermissionForWriteExternalStorage() {
         try {
             ActivityCompat.requestPermissions((Activity) this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     WRITE_STORAGE_PERMISSION_REQUEST_CODE);

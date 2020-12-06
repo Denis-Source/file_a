@@ -52,14 +52,13 @@ public class MainActivity extends AppCompatActivity {
         if (data == null) {
             return;
         }
-        switch (requestCode) {
-            case PICKFILE_RESULT_CODE:
-                if (resultCode == RESULT_OK) {
-                    Uri filePath = data.getData();
-                    Intent aActivity = new Intent(this, AnalysisActivity.class);
-                    aActivity.putExtra("file_uri", filePath.toString());
-                    startActivity(aActivity);
-                }
+        if (requestCode == PICKFILE_RESULT_CODE) {
+            if (resultCode == RESULT_OK) {
+                Uri filePath = data.getData();
+                Intent aActivity = new Intent(this, AnalysisActivity.class);
+                aActivity.putExtra("file_uri", filePath.toString());
+                startActivity(aActivity);
+            }
         }
     }
     public boolean checkPermissionForReadExtertalStorage() {

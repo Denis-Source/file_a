@@ -32,8 +32,9 @@
         android:id="@+id/save_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save"
+        android:text="@string/save_btn"
         android:textSize="24sp"
+        android:padding="16dp"
         android:layout_gravity="center"
         android:onClick="onSaveImageClick"/>
 

@@ -2,22 +2,11 @@ package com.example.file_a;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.IntBuffer;
-import java.util.Arrays;
-import java.util.Map;
-
-import static android.graphics.Color.rgb;
 
 
 public class Utils {
@@ -44,8 +33,8 @@ public class Utils {
         int resolution = 256;
 
         int[] colors = new int[]{
+                Color.rgb(0, 0, 0),
                 Color.rgb(6, 7, 28),
-                Color.rgb(30, 18, 45),
                 Color.rgb(39, 21, 52),
                 Color.rgb(48, 23, 58),
 
@@ -126,7 +115,8 @@ public class Utils {
                 curPixelValue = bytesA[bx][by].amount;
                 curPixelColor = colors[0];
                 for (int i = 0; i < colors.length; i++) {
-                    if (colorThresholds[i] <= curPixelValue && curPixelValue <= colorThresholds[i + 1]) {
+                    if (colorThresholds[i] <= curPixelValue &&
+                            curPixelValue <= colorThresholds[i + 1]) {
                         curPixelColor = colors[i];
                     }
                 }
@@ -134,13 +124,11 @@ public class Utils {
             }
         }
 
-        Bitmap scaledBitmapHeatMap = Bitmap.createScaledBitmap(
+        return Bitmap.createScaledBitmap(
                 bitmapHeatMap,
                 bitmapHeatMap.getWidth() * 8,
                 bitmapHeatMap.getHeight() * 8,
                 false
         );
-
-        return scaledBitmapHeatMap;
     }
 }
