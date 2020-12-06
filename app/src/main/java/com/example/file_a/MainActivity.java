@@ -15,6 +15,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final int PICKFILE_RESULT_CODE = 1;
@@ -24,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        Objects.requireNonNull(getSupportActionBar()).hide();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)

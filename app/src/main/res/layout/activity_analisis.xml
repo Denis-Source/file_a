@@ -36,6 +36,7 @@
         android:textSize="24sp"
         android:padding="16dp"
         android:layout_gravity="center"
-        android:onClick="onSaveImageClick"/>
+        android:onClick="onSaveImageClick"
+        android:textColor="@color/white"/>
 
 </LinearLayout>

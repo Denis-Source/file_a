@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
+import java.util.Objects;
 
 public class AnalysisActivity extends AppCompatActivity {
     private static final int PICKFILE_RESULT_CODE = 1;
@@ -38,6 +39,7 @@ public class AnalysisActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_analisis);
         filePathView = findViewById(R.id.file_path);
         infoView = findViewById(R.id.info);
