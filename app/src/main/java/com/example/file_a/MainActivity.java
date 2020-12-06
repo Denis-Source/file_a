@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
     public boolean checkPermissionForReadExternalStorage() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int result = this.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return false;
     }
+
     public void requestPermissionForReadExternalStorage() {
         try {
             ActivityCompat.requestPermissions((Activity) this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
