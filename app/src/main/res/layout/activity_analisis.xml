@@ -8,6 +8,7 @@
     tools:context=".AnalysisActivity">
 
     <TextView
+        android:layout_margin="24dp"
         android:id="@+id/file_path"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
