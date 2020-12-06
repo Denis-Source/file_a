@@ -27,13 +27,16 @@ import java.util.Calendar;
 import java.util.Objects;
 
 public class AnalysisActivity extends AppCompatActivity {
-    private static final int PICKFILE_RESULT_CODE = 1;
-    private static final int WRITE_STORAGE_PERMISSION_REQUEST_CODE = 2;
+    private static final int WRITE_STORAGE_PERMISSION_REQUEST_CODE = 1;
 
+    TextView titleView;
     TextView filePathView;
     TextView infoView;
     ImageView imageView;
     Bitmap image;
+
+    String analysisType;
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -41,24 +44,32 @@ public class AnalysisActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_analisis);
+
+        titleView = findViewById(R.id.analysis_title);
         filePathView = findViewById(R.id.file_path);
         infoView = findViewById(R.id.info);
         imageView = findViewById(R.id.output_image);
 
-        Intent aActivity = getIntent();
-        Uri fileUri = Uri.parse(aActivity.getStringExtra("file_uri"));
-        InputStream inputStream = null;
-        try {
-            inputStream = this.getContentResolver().openInputStream(fileUri);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        if (inputStream != null) {
-            image = Utils.heatMap(inputStream);
-            imageView.setImageBitmap(image);
-            filePathView.setText(fileUri.getPath());
-        }
+        analysisType = "HeatMap";
 
+        titleView.setText(analysisType);
+
+        switch (analysisType) {
+            case "HeatMap":
+                Intent aActivity = getIntent();
+                Uri fileUri = Uri.parse(aActivity.getStringExtra("file_uri"));
+                InputStream inputStream = null;
+                try {
+                    inputStream = this.getContentResolver().openInputStream(fileUri);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                if (inputStream != null) {
+                    image = Utils.heatMap(inputStream);
+                    imageView.setImageBitmap(image);
+                    filePathView.setText(fileUri.getPath());
+                }
+        }
     }
 
     public void onSaveImageClick(View view) {

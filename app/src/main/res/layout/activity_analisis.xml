@@ -1,45 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="16dp"
     tools:context=".AnalysisActivity">
 
     <TextView
-        android:layout_margin="24dp"
-        android:id="@+id/file_path"
-        android:layout_width="match_parent"
+        android:id="@+id/analysis_title"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textSize="32sp" />
+
+    <TextView
+        android:id="@+id/file_path"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="16dp"
         android:gravity="center"
         android:textSize="24sp" />
 
     <ImageView
         android:id="@+id/output_image"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="24dp"
-        android:adjustViewBounds="true" />
-
-    <TextView
-        android:id="@+id/debug"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_gravity="center"
-        android:layout_margin="24dp"
-        android:textSize="20sp" />
+        android:layout_margin="16dp"
+        android:layout_weight="1"
+        android:contentDescription="@string/image_description" />
 
     <Button
         android:id="@+id/save_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_margin="16dp"
         android:onClick="onSaveImageClick"
-        android:padding="16dp"
+        android:padding="8dp"
         android:text="@string/save_btn"
         android:textColor="@color/white"
-        android:textSize="24sp" />
+        android:textSize="20sp" />
 
 </LinearLayout>
