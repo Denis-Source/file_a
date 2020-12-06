@@ -1,32 +1,43 @@
 package com.example.file_a;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
+
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 
 public class Utils {
-    static public byte[] readFile(String filePath){
-        File file = new File(filePath);
-        int size = (int) file.length();
-        byte[] bytes = new byte[size];
+    static public byte[] readFile(InputStream inputStream){
         try {
-            BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
-            buf.read(bytes, 0, bytes.length);
-            buf.close();
+            byte[] bytes = getBytes(inputStream);
             return bytes;
         } catch (FileNotFoundException e) {
-            return bytes;
+            return new byte[0];
         } catch (IOException e) {
-            return bytes;
+            return new byte[0];
         }
     }
+    public static byte[] getBytes(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+        int bufferSize = 1024;
+        byte[] buffer = new byte[bufferSize];
 
-    static public Bitmap heatMap (String fileName){
+        int len = 0;
+        while ((len = inputStream.read(buffer)) != -1) {
+            byteBuffer.write(buffer, 0, len);
+        }
+        return byteBuffer.toByteArray();
+    }
+
+    static public Bitmap heatMap (InputStream inputStream){
         int x;
         int y;
 
@@ -63,7 +74,7 @@ public class Utils {
             }
         }
 
-        byte[] bytes = readFile(fileName);
+        byte[] bytes = readFile(inputStream);
 
         for (int i = 0; i < bytes.length - 1; i++) {
             x = bytes[i] & 0xff;

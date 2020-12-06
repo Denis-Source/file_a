@@ -19,12 +19,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Calendar;
 
 public class AnalysisActivity extends AppCompatActivity {
-    private static final int WRITE_STORAGE_PERMISSION_REQUEST_CODE = 1;
+    private static final int PICKFILE_RESULT_CODE = 1;
+    private static final int WRITE_STORAGE_PERMISSION_REQUEST_CODE = 2;
+
     TextView filePathView;
     TextView infoView;
     ImageView imageView;
@@ -40,20 +44,19 @@ public class AnalysisActivity extends AppCompatActivity {
         imageView = findViewById(R.id.output_image);
 
         Intent aActivity = getIntent();
+        Uri fileUri = Uri.parse(aActivity.getStringExtra("file_uri"));
+        InputStream inputStream = null;
+        try {
+            inputStream = this.getContentResolver().openInputStream(fileUri);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (inputStream != null) {
+            image = Utils.heatMap(inputStream);
+            imageView.setImageBitmap(image);
+            filePathView.setText(fileUri.getPath());
+        }
 
-        String filePath = getFilePath(Uri.parse(aActivity.getStringExtra("file_uri")));
-        filePathView.setText(filePath);
-
-        image = Utils.heatMap(filePath);
-
-        imageView.setImageBitmap(image);
-    }
-
-
-    public String getFilePath(Uri fileUri){
-        return  Environment.getExternalStorageDirectory() +
-                "/" +
-                fileUri.getPath().split(":")[1];
     }
 
     public void onSaveImageClick(View view) {
@@ -91,6 +94,7 @@ public class AnalysisActivity extends AppCompatActivity {
         }
         return false;
     }
+
     public void requestPermissionForWriteExternalStorage() {
         try {
             ActivityCompat.requestPermissions((Activity) this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},

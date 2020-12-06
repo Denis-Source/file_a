@@ -29,15 +29,13 @@ public class MainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void onSelectFileClick(View view) {
-        if (!checkPermissionForReadExtertalStorage()) {
+        if (!checkPermissionForReadExternalStorage()) {
             try {
-                requestPermissionForReadExtertalStorage();
+                requestPermissionForReadExternalStorage();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
-
         Intent fileintent = new Intent(Intent.ACTION_GET_CONTENT);
         fileintent.setType("*/*");
         try {
@@ -61,14 +59,14 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-    public boolean checkPermissionForReadExtertalStorage() {
+    public boolean checkPermissionForReadExternalStorage() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int result = this.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
             return result == PackageManager.PERMISSION_GRANTED;
         }
         return false;
     }
-    public void requestPermissionForReadExtertalStorage() throws Exception {
+    public void requestPermissionForReadExternalStorage() {
         try {
             ActivityCompat.requestPermissions((Activity) this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     READ_STORAGE_PERMISSION_REQUEST_CODE);
