@@ -14,19 +14,39 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private static final int PICKFILE_RESULT_CODE = 1;
     private static final int READ_STORAGE_PERMISSION_REQUEST_CODE = 2;
+
+    String[] methods = {
+            "HeatMap",
+            "Bit Distribution",
+            "Byte Distribution",
+
+    };
+    String currentMethod;
+
+    Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Objects.requireNonNull(getSupportActionBar()).hide();
+
+        spinner = findViewById(R.id.method_spinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, methods);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -57,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 Uri filePath = data.getData();
                 Intent aActivity = new Intent(this, AnalysisActivity.class);
                 aActivity.putExtra("file_uri", filePath.toString());
+                aActivity.putExtra("method", currentMethod);
                 startActivity(aActivity);
             }
         }
@@ -78,5 +99,16 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
             throw e;
         }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        currentMethod = methods[position];
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        Toast.makeText(this, "Select method!", Toast.LENGTH_SHORT).show();
+
     }
 }

@@ -1,6 +1,7 @@
 package com.example.file_a;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -15,29 +16,29 @@ import java.io.InputStream;
 
 
 public class Utils {
-    static public byte[] readFile(InputStream inputStream){
+    static public byte[] readFile(InputStream inputStream) {
         try {
-            byte[] bytes = getBytes(inputStream);
-            return bytes;
+            return getBytes(inputStream);
         } catch (FileNotFoundException e) {
             return new byte[0];
         } catch (IOException e) {
             return new byte[0];
         }
     }
+
     public static byte[] getBytes(InputStream inputStream) throws IOException {
         ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
         int bufferSize = 1024;
         byte[] buffer = new byte[bufferSize];
 
-        int len = 0;
+        int len;
         while ((len = inputStream.read(buffer)) != -1) {
             byteBuffer.write(buffer, 0, len);
         }
         return byteBuffer.toByteArray();
     }
 
-    static public Bitmap heatMap (InputStream inputStream){
+    static public Bitmap heatMap(InputStream inputStream) {
         int x;
         int y;
 
@@ -68,8 +69,8 @@ public class Utils {
 
         ByteA[][] bytesA = new ByteA[resolution][resolution];
 
-        for(int bx = 0; bx < resolution; bx++){
-            for(int by = 0; by < resolution; by++) {
+        for (int bx = 0; bx < resolution; bx++) {
+            for (int by = 0; by < resolution; by++) {
                 bytesA[bx][by] = new ByteA(bx, by);
             }
         }
@@ -89,8 +90,8 @@ public class Utils {
         int curPixelValue;
         float avgPixelValues;
 
-        for (ByteA[] bs:bytesA){
-            for (ByteA b:bs){
+        for (ByteA[] bs : bytesA) {
+            for (ByteA b : bs) {
                 sumPixelValue += b.amount;
                 if (maxPixelValue < b.amount) {
                     maxPixelValue = b.amount;
@@ -105,7 +106,7 @@ public class Utils {
         if (maxPixelValue > avgPixelValues * colors.length) {
             maxPixelValue = avgPixelValues * colors.length;
         }
-        if (minPixelValue < avgPixelValues/ colors.length) {
+        if (minPixelValue < avgPixelValues / colors.length) {
             minPixelValue = avgPixelValues / colors.length;
         }
 
@@ -142,4 +143,33 @@ public class Utils {
                 false
         );
     }
+
+    public static long[] countBits(InputStream inputStream) {
+        byte[] bytes = readFile(inputStream);
+        long[] bitsAmount = {0, 0};
+
+        for (byte b : bytes) {
+            bitsAmount[0] += 8 - Integer.bitCount(b) & 0xff;
+            bitsAmount[1] += Integer.bitCount(b) & 0xff;
+        }
+
+        return bitsAmount;
+    }
+
+    public static long[] countBytes(InputStream inputStream) {
+        byte[] bytes = readFile(inputStream);
+        int byteSize = 256;
+
+        long[] bytesAmount = new long[byteSize];
+        for (int i = 0; i < byteSize; i++) {
+            bytesAmount[i] = 0;
+        }
+
+        for (byte b : bytes) {
+            bytesAmount[b & 0xff] += 1;
+        }
+
+        return bytesAmount;
+    }
+
 }

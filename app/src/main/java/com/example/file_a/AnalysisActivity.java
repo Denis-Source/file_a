@@ -9,14 +9,21 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.BarGraphSeries;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -34,8 +41,9 @@ public class AnalysisActivity extends AppCompatActivity {
     TextView infoView;
     ImageView imageView;
     Bitmap image;
-
-    String analysisType;
+    GraphView graphView;
+    String method;
+    Button saveBtn;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -49,27 +57,65 @@ public class AnalysisActivity extends AppCompatActivity {
         filePathView = findViewById(R.id.file_path);
         infoView = findViewById(R.id.info);
         imageView = findViewById(R.id.output_image);
+        graphView = findViewById(R.id.graph);
+        saveBtn = findViewById(R.id.save_btn);
 
-        analysisType = "HeatMap";
-
-        titleView.setText(analysisType);
-
-        switch (analysisType) {
-            case "HeatMap":
-                Intent aActivity = getIntent();
-                Uri fileUri = Uri.parse(aActivity.getStringExtra("file_uri"));
-                InputStream inputStream = null;
-                try {
-                    inputStream = this.getContentResolver().openInputStream(fileUri);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                if (inputStream != null) {
-                    image = Utils.heatMap(inputStream);
-                    imageView.setImageBitmap(image);
-                    filePathView.setText(fileUri.getPath());
-                }
+        titleView.setText(method);
+        Intent aActivity = getIntent();
+        method = aActivity.getStringExtra("method");
+        Uri fileUri = Uri.parse(aActivity.getStringExtra("file_uri"));
+        InputStream inputStream = null;
+        try {
+            inputStream = this.getContentResolver().openInputStream(fileUri);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
+
+        if (inputStream != null) {
+            filePathView.setText(fileUri.getPath());
+            switch (method) {
+                case "HeatMap":
+                    drawHeatMap(imageView, inputStream);
+                    break;
+                case "Bit Distribution":
+                    plotBarGraph(graphView, Utils.countBits(inputStream));
+                    saveBtn.setVisibility(View.GONE);
+                    break;
+                case "Byte Distribution":
+                    plotBarGraph(graphView, Utils.countBytes(inputStream));
+                    saveBtn.setVisibility(View.GONE);
+                    break;
+            }
+        }
+    }
+
+    public void plotBarGraph(GraphView graph, long[] distribution) {
+        imageView.setVisibility(View.GONE);
+        try {
+            DataPoint[] dataPoints;
+            dataPoints = new DataPoint[distribution.length];
+
+            for (int i = 0; i < dataPoints.length; i++) {
+                dataPoints[i] = new DataPoint(i + 1, distribution[i]);
+            }
+            BarGraphSeries<DataPoint> series = new BarGraphSeries<>(dataPoints);
+            series.setSpacing(50);
+            series.setAnimated(true);
+            series.setColor(Color.RED);
+            graph.addSeries(series);
+            graph.getViewport().setScalable(true);
+            graph.getViewport().setMinX(0d);
+            graph.getViewport().setMaxX(4d);
+            graph.getViewport().setXAxisBoundsManual(true);
+        } catch (IllegalArgumentException e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void drawHeatMap(ImageView imageView, InputStream inputStream) {
+        graphView.setVisibility(View.GONE);
+        image = Utils.heatMap(inputStream);
+        imageView.setImageBitmap(image);
     }
 
     public void onSaveImageClick(View view) {
