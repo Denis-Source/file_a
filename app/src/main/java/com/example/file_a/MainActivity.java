@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Objects;
@@ -30,7 +31,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             "HeatMap",
             "Bit Distribution",
             "Byte Distribution",
-
+            "Find Series (length 2)",
+            "Find Series (length 3)",
+            "Find Series (length 4)",
+            "Find Series (length 5)",
+            "Find Series (length 6)",
+            "Find Series (length 7)",
+            "Find Series (length 8)"
     };
     String currentMethod;
 
@@ -43,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Objects.requireNonNull(getSupportActionBar()).hide();
 
         spinner = findViewById(R.id.method_spinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, methods);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, methods);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);

@@ -13,6 +13,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class Utils {
@@ -172,4 +174,45 @@ public class Utils {
         return bytesAmount;
     }
 
+    public static long[] countSeries(InputStream inputStream, int seriesLen) {
+        byte[] bytes = readFile(inputStream);
+        StringBuilder binary = new StringBuilder();
+
+
+        for (byte b:bytes) {
+            binary.append(Integer.toBinaryString(b & 0xff));
+        }
+
+        String[] series = product(seriesLen);
+        long[] seriesAmount = new long[series.length];
+
+        for (int i = 0; i < series.length; i++) {
+            Pattern pattern = Pattern.compile(series[i]);
+            Matcher matcher = pattern.matcher(binary);
+            int count = 0;
+            while (matcher.find())
+                count++;
+            seriesAmount[i] = count;
+        }
+        return seriesAmount;
+    }
+
+    public static String[] product(int len) {
+        int comb = (int) Math.pow(2, len);
+
+        String alpha = "01";
+        int size = alpha.length();
+
+        StringBuilder s = new StringBuilder();
+        String[] prod = new String[comb];
+
+        for (int i = 0; i < comb; i++) {
+            for (int j = 0; j < len; j++) {
+                s.append(alpha.charAt(i / (int) Math.pow(size, len - j - 1) % size));
+            }
+            prod[i] = s.toString();
+            s.setLength(0);
+        }
+        return prod;
+    }
 }

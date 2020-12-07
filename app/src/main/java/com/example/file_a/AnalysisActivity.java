@@ -71,25 +71,47 @@ public class AnalysisActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        saveBtn.setVisibility(View.GONE);
         if (inputStream != null) {
             filePathView.setText(fileUri.getPath());
             switch (method) {
                 case "HeatMap":
-                    drawHeatMap(imageView, inputStream);
+                    drawHeatMap(inputStream);
+                    saveBtn.setVisibility(View.VISIBLE);
                     break;
                 case "Bit Distribution":
-                    plotBarGraph(graphView, Utils.countBits(inputStream));
-                    saveBtn.setVisibility(View.GONE);
+                    plotBarGraph(Utils.countBits(inputStream));
                     break;
                 case "Byte Distribution":
-                    plotBarGraph(graphView, Utils.countBytes(inputStream));
-                    saveBtn.setVisibility(View.GONE);
+                    plotBarGraph(Utils.countBytes(inputStream));
+                    break;
+                case "Find Series (length 2)":
+                    plotBarGraph(Utils.countSeries(inputStream, 2));
+                    break;
+                case "Find Series (length 3)":
+                    plotBarGraph(Utils.countSeries(inputStream, 3));
+                    break;
+                case "Find Series (length 4)":
+                    plotBarGraph(Utils.countSeries(inputStream, 4));
+                    break;
+                case "Find Series (length 5)":
+                    plotBarGraph(Utils.countSeries(inputStream, 5));
+                    break;
+                case "Find Series (length 6)":
+                    plotBarGraph(Utils.countSeries(inputStream, 6));
+                    break;
+                case "Find Series (length 7)":
+                    plotBarGraph(Utils.countSeries(inputStream, 7));
+                    break;
+                case "Find Series (length 8)":
+                    plotBarGraph(Utils.countSeries(inputStream, 8));
                     break;
             }
         }
     }
 
-    public void plotBarGraph(GraphView graph, long[] distribution) {
+
+    public void plotBarGraph(long[] distribution) {
         imageView.setVisibility(View.GONE);
         try {
             DataPoint[] dataPoints;
@@ -102,17 +124,17 @@ public class AnalysisActivity extends AppCompatActivity {
             series.setSpacing(50);
             series.setAnimated(true);
             series.setColor(Color.RED);
-            graph.addSeries(series);
-            graph.getViewport().setScalable(true);
-            graph.getViewport().setMinX(0d);
-            graph.getViewport().setMaxX(4d);
-            graph.getViewport().setXAxisBoundsManual(true);
+            graphView.addSeries(series);
+            graphView.getViewport().setScalable(true);
+            graphView.getViewport().setMinX(0d);
+            graphView.getViewport().setMaxX(4d);
+            graphView.getViewport().setXAxisBoundsManual(true);
         } catch (IllegalArgumentException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
-    public void drawHeatMap(ImageView imageView, InputStream inputStream) {
+    public void drawHeatMap(InputStream inputStream) {
         graphView.setVisibility(View.GONE);
         image = Utils.heatMap(inputStream);
         imageView.setImageBitmap(image);

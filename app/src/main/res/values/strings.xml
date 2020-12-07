@@ -3,4 +3,5 @@
     <string name="save_btn">Save</string>
     <string name="select_file_btn">Select File</string>
     <string name="image_description">analysis</string>
+    <string name="title">File Analyzer</string>
 </resources>
